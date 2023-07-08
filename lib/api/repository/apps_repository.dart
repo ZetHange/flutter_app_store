@@ -20,12 +20,11 @@ Future<Pagination> fetchApps(
   }
 }
 
-Future<App> fetchAppById(int id) async {
+Future<AppSuggested> fetchAppById(int id) async {
   final response = await http.get(Uri.parse('${Api.apiUrl}/apps/$id'));
 
   if (response.statusCode == 200) {
-    final app = App.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-    debugPrint(app.toString());
+    final app = AppSuggested.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
     return app;
   } else {
     throw Exception('Failed to load app with id $id: ${response.statusCode}');

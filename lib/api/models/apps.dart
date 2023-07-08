@@ -121,6 +121,27 @@ class AppSummary {
   }
 }
 
+class AppSuggested {
+  final App app;
+  final List<App> apps;
+
+
+  AppSuggested({
+    required this.app,
+    required this.apps,
+  });
+
+  factory AppSuggested.fromJson(Map<String, dynamic> json) {
+    final appsList = json['apps'] as List<dynamic>;
+    final apps = appsList.map((item) => App.fromJson(item)).toList();
+
+    return AppSuggested(
+      app: App.fromJson(json['app']),
+      apps: apps,
+    );
+  }
+}
+
 class Package {
   String packageName;
   String version;

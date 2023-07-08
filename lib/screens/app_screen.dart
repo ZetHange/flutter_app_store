@@ -21,15 +21,15 @@ class AppScreen extends StatefulWidget {
 }
 
 class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
-  late Future<App> _futureApp;
+  late Future<AppSuggested> _futureApp;
   late bool _installed = false;
   String _installedPackageVersion = "";
   bool _isLoading = false;
   double _progress = 0;
 
   Future<void> checkPackageName() async {
-    App gettedApp = await _futureApp;
-    final String package = gettedApp.packageName;
+    AppSuggested gettedApp = await _futureApp;
+    final String package = gettedApp.app.packageName;
     AppCheck.checkAvailability(package).then(
       (app) => {
         setState(() {
@@ -79,24 +79,28 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
   }
 
   Future<void> playApp() async {
-    App gettedApp = await _futureApp;
-    final String package = gettedApp.packageName;
+    AppSuggested gettedApp = await _futureApp;
+    final String package = gettedApp.app.packageName;
     await AppCheck.launchApp(package);
   }
 
   Future<void> downloadApp() async {
+    setState(() {
+      _isLoading = true;
+    });
     await [
       Permission.storage,
     ].request();
     await [
       Permission.requestInstallPackages,
     ].request();
-    App gettedApp = await _futureApp;
-    String url = gettedApp.downloadLink;
-    String fileName = '${gettedApp.title}-${gettedApp.latestVersion}.apk';
+    AppSuggested gettedApp = await _futureApp;
+    String url = gettedApp.app.downloadLink;
+    String fileName =
+        '${gettedApp.app.title}-${gettedApp.app.latestVersion}.apk';
     Directory dir = Directory('/storage/emulated/0/Download/SWN Play');
     String savePath = '${dir.path}/$fileName';
-    downloadAppById(gettedApp.id);
+    downloadAppById(gettedApp.app.id);
 
     await Dio().download(
       url,
@@ -116,7 +120,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
       ),
       body: Container(
         padding: const EdgeInsets.only(left: 10, right: 10),
-        child: FutureBuilder<App>(
+        child: FutureBuilder<AppSuggested>(
           future: _futureApp,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
@@ -131,7 +135,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                           borderRadius: BorderRadius.circular(15.0),
                           child: Image(
                             width: 80,
-                            image: NetworkImage(snapshot.data!.logo),
+                            image: NetworkImage(snapshot.data!.app.logo),
                           ),
                         ),
                         Container(
@@ -140,11 +144,11 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                snapshot.data!.title,
+                                snapshot.data!.app.title,
                                 style: const TextStyle(fontSize: 18),
                               ),
                               Text(
-                                snapshot.data!.developer,
+                                snapshot.data!.app.developer,
                                 style: const TextStyle(color: Colors.grey),
                               ),
                             ],
@@ -158,7 +162,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                         builder: (BuildContext context) {
                           if (_installed &&
                               _installedPackageVersion ==
-                                  snapshot.data!.latestVersion) {
+                                  snapshot.data!.app.latestVersion) {
                             return ElevatedButton(
                               onPressed: playApp,
                               style: ElevatedButton.styleFrom(
@@ -170,7 +174,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                             );
                           } else if (_installed &&
                               _installedPackageVersion !=
-                                  snapshot.data!.latestVersion) {
+                                  snapshot.data!.app.latestVersion) {
                             return ElevatedButton(
                               onPressed: _isLoading ? null : downloadApp,
                               style: ElevatedButton.styleFrom(
@@ -222,7 +226,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    InfoAppWidget(app: snapshot.data!),
+                    InfoAppWidget(app: snapshot.data!.app),
                     const SizedBox(
                       height: 10,
                     ),
@@ -235,7 +239,7 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => AppDescriptionScreen(
-                                  app: snapshot.data!,
+                                  app: snapshot.data!.app,
                                   installedPackageVersion:
                                       _installedPackageVersion,
                                 ),
@@ -261,10 +265,68 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          snapshot.data!.description,
+                          snapshot.data!.app.description,
                         ),
                       ],
                     ),
+                    if (snapshot.data!.apps.isNotEmpty)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 10),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            child: const Text(
+                              "Похожие приложения",
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (var app in snapshot.data!.apps)
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => AppScreen(
+                                              id: app.id, title: app.title),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(5),
+                                      child: Column(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image(
+                                              image:
+                                                  Image.network(app.logo).image,
+                                              width: 100,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(app.title)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     const SizedBox(height: 10),
                     Container(
                       padding: const EdgeInsets.all(5),
@@ -279,13 +341,9 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       physics: const PageScrollPhysics(),
-                      controller: PageController(
-                        viewportFraction:
-                            120 / (MediaQuery.of(context).size.width - 20),
-                      ),
                       child: Row(
                         children: [
-                          for (var screenshot in snapshot.data!.screenshots)
+                          for (var screenshot in snapshot.data!.app.screenshots)
                             Row(
                               children: [
                                 ClipRRect(
