@@ -47,10 +47,11 @@ class SWNPlayApp extends StatelessWidget {
       title: 'SWN Play',
       theme: ThemeData(
         useMaterial3: true,
-        primaryColor: Colors.white,
-        backgroundColor: Colors.white,
+        scaffoldBackgroundColor: Colors.white,
         navigationBarTheme: const NavigationBarThemeData(
-            backgroundColor: Colors.white, indicatorColor: Colors.green),
+          backgroundColor: Colors.white,
+          indicatorColor: Colors.green,
+        ),
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',

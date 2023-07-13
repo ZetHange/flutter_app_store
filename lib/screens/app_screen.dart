@@ -31,7 +31,8 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
     AppSuggested gettedApp = await _futureApp;
     final String package = gettedApp.app.packageName;
     AppCheck.checkAvailability(package).then(
-      (app) => {
+          (app) =>
+      {
         setState(() {
           _installed = true;
           _installedPackageVersion = app!.versionName!;
@@ -184,18 +185,28 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                               ),
                               child: _isLoading
                                   ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                            value: _progress,
-                                            color: Colors.green),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                            '${(_progress * 100).toStringAsFixed(0)}%')
-                                      ],
-                                    )
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    value: _progress,
+                                    color: Colors.green,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    '${(_progress * 100).toStringAsFixed(0)}%',
+                                  )
+                                ],
+                              )
                                   : const Text('Обновить'),
+                            );
+                          } else
+                          if (snapshot.data!.app.downloadLink == "null") {
+                            return ElevatedButton(onPressed: null,
+                                style: ElevatedButton.styleFrom(
+                                  minimumSize: const Size(double.infinity, 48),
+                                ),
+                                child: const Text("Скоро в SWN Play"),
                             );
                           } else {
                             return ElevatedButton(
@@ -207,18 +218,19 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                               ),
                               child: _isLoading
                                   ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(
-                                          value: _progress,
-                                          color: Colors.green,
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                            '${(_progress * 100).toStringAsFixed(0)}%')
-                                      ],
-                                    )
+                                mainAxisAlignment:
+                                MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(
+                                    value: _progress,
+                                    color: Colors.green,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                      '${(_progress * 100).toStringAsFixed(
+                                          0)}%')
+                                ],
+                              )
                                   : const Text('Загрузить'),
                             );
                           }
@@ -238,11 +250,12 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AppDescriptionScreen(
-                                  app: snapshot.data!.app,
-                                  installedPackageVersion:
+                                builder: (context) =>
+                                    AppDescriptionScreen(
+                                      app: snapshot.data!.app,
+                                      installedPackageVersion:
                                       _installedPackageVersion,
-                                ),
+                                    ),
                               ),
                             );
                           },
@@ -296,8 +309,9 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => AppScreen(
-                                              id: app.id, title: app.title),
+                                          builder: (context) =>
+                                              AppScreen(
+                                                  id: app.id, title: app.title),
                                         ),
                                       );
                                     },
@@ -307,10 +321,12 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                                         children: [
                                           ClipRRect(
                                             borderRadius:
-                                                BorderRadius.circular(10),
+                                            BorderRadius.circular(10),
                                             child: Image(
                                               image:
-                                                  Image.network(app.logo).image,
+                                              Image
+                                                  .network(app.logo)
+                                                  .image,
                                               width: 100,
                                             ),
                                           ),
@@ -349,9 +365,14 @@ class _AppScreenState extends State<AppScreen> with WidgetsBindingObserver {
                                 ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
                                   child: Image(
-                                    image: Image.network(screenshot).image,
+                                    image: Image
+                                        .network(screenshot)
+                                        .image,
                                     width:
-                                        MediaQuery.of(context).size.width - 20,
+                                    MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width - 20,
                                   ),
                                 ),
                               ],

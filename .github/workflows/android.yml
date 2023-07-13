@@ -21,7 +21,7 @@ jobs:
           name: swn-play
           path: build/app/outputs/flutter-apk/app-release.apk
 
-      - name: Отправка билда в телеграм группу
+      - name: Отправка билда в telegram
         uses: appleboy/telegram-action@master
         with:
           to: -1001973053718
