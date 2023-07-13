@@ -28,7 +28,17 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             Билд ${{github.run_number}}
-            Изменения: ${{ github.event.head_commit.message }}
+            ${{ github.event.head_commit.message }}
             
             Репозиторий: https://github.com/${{ github.repository }}
+          document: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Отправка билда в telegram №2
+        uses: appleboy/telegram-action@master
+        with:
+          to: 1957644734
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            Билд ${{github.run_number}}
+            ${{ github.event.head_commit.message }}
           document: build/app/outputs/flutter-apk/app-release.apk

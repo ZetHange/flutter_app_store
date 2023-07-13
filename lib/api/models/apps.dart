@@ -10,6 +10,7 @@ class App {
   final String descriptionFull;
   final String latestVersion;
   final String packageName;
+  final String fileWeight;
   final int downloadedQuantity;
   final int viewedQuantity;
   final bool isPublished;
@@ -31,6 +32,7 @@ class App {
     required this.packageName,
     required this.downloadedQuantity,
     required this.viewedQuantity,
+    required this.fileWeight,
     required this.isPublished,
     required this.info,
     required this.createdAt,
@@ -53,6 +55,7 @@ class App {
       downloadedQuantity: json['downloadedQuantity'] as int,
       viewedQuantity: json['viewedQuantity'] as int,
       isPublished: json['isPublished'] as bool,
+      fileWeight: json['fileWeight'] as String,
       info: AppInfo.fromJson(json['info'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -124,7 +127,6 @@ class AppSummary {
 class AppSuggested {
   final App app;
   final List<App> apps;
-
 
   AppSuggested({
     required this.app,
