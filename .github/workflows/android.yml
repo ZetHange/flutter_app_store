@@ -36,7 +36,7 @@ jobs:
       - name: Отправка билда в telegram №2
         uses: appleboy/telegram-action@master
         with:
-          to: 1957644734
+          to: -1957644734
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
             Билд ${{github.run_number}}
