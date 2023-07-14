@@ -11,6 +11,7 @@ class App {
   final String latestVersion;
   final String packageName;
   final String fileWeight;
+  final String whatsNew;
   final int downloadedQuantity;
   final int viewedQuantity;
   final bool isPublished;
@@ -33,6 +34,7 @@ class App {
     required this.downloadedQuantity,
     required this.viewedQuantity,
     required this.fileWeight,
+    required this.whatsNew,
     required this.isPublished,
     required this.info,
     required this.createdAt,
@@ -56,6 +58,7 @@ class App {
       viewedQuantity: json['viewedQuantity'] as int,
       isPublished: json['isPublished'] as bool,
       fileWeight: json['fileWeight'] as String,
+      whatsNew: json['whatsNew'] as String,
       info: AppInfo.fromJson(json['info'] as Map<String, dynamic>),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -126,7 +129,7 @@ class AppSummary {
 
 class AppSuggested {
   final App app;
-  final List<App> apps;
+  final List<AppSummary> apps;
 
   AppSuggested({
     required this.app,
@@ -135,7 +138,7 @@ class AppSuggested {
 
   factory AppSuggested.fromJson(Map<String, dynamic> json) {
     final appsList = json['apps'] as List<dynamic>;
-    final apps = appsList.map((item) => App.fromJson(item)).toList();
+    final apps = appsList.map((item) => AppSummary.fromJson(item)).toList();
 
     return AppSuggested(
       app: App.fromJson(json['app']),

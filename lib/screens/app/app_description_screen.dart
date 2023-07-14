@@ -26,6 +26,26 @@ class AppDescriptionScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
+              if (app.whatsNew.isNotEmpty)
+                const Text(
+                "Что нового:",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              if (app.whatsNew.isNotEmpty)
+                MyMarkdownWidget(app.whatsNew),
+              const SizedBox(height: 10),
+              const Text(
+                "Описание:",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
               MyMarkdownWidget(app.descriptionFull),
               const Divider(color: Colors.grey),
               Container(
@@ -46,13 +66,14 @@ class AppDescriptionScreen extends StatelessWidget {
                         Text(app.latestVersion)
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Установленная версия:"),
-                        Text(installedPackageVersion),
-                      ],
-                    ),
+                    if (installedPackageVersion.isNotEmpty)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Установленная версия:"),
+                          Text(installedPackageVersion),
+                        ],
+                      ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
