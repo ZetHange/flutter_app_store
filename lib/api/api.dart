@@ -1,3 +1,3 @@
 class Api {
-  static const String apiUrl = "https://play-api.stalkerworldnews.ru/api/v1";
+  static const String apiUrl = "https://play.stalkerworldnews.ru/api/v1";
 }
